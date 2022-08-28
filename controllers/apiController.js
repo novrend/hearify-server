@@ -1,7 +1,21 @@
 const spotify = require("../helpers/spotifyApi");
 const fetch = require("node-fetch");
-
+const qr = require("../helpers/qr");
 class Controller {
+  static async payment(req, res, next) {
+    const { paymentGateway } = req.body;
+    try {
+      if (paymentGateway === "qris") {
+        const qris = await qr();
+        res.status(201).json({
+          qris,
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async getAlbumDetail(req, res, next) {
     try {
       const { albumId } = req.query;

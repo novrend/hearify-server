@@ -9,6 +9,8 @@ router.get("/get-playlist-by-genre", apiController.getPlaylistByGenre);
 router.get("/get-genre", apiController.getGenreList);
 router.get("/find-playlist-by-genre", apiController.findPlaylist);
 
+router.post("/create-payment", apiController.payment);
+
 router.get("/trx", apiController.getBSCTrx)
 
 module.exports = router;
