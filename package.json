@@ -1,0 +1,35 @@
+{
+  "name": "p2-iproject-server",
+  "version": "1.0.0",
+  "description": "Individual Project - Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "restart": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/novrend/p2-iproject-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/novrend/p2-iproject-server/issues"
+  },
+  "homepage": "https://github.com/novrend/p2-iproject-server#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "google-auth-library": "^8.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^2.6.7",
+    "nodemailer": "^6.7.8",
+    "pg": "^8.8.0",
+    "sequelize": "^6.21.4",
+    "spotify-web-api-node": "^5.0.2"
+  }
+}
