@@ -149,30 +149,34 @@ class Controller {
 
   static async paidTransaction(req, res, next) {
     try {
-      const { id, jwt } = req.query;
-      const user = verifyJWT(jwt);
-      const findTrx = await Transaction.findOne({
-        where: {
-          transactionId: id,
-          UserId: user.id,
-        },
-      });
-      if (!findTrx) {
-        throw { code: 404, msg: "Transaction not found" };
-      }
-      await User.update(
-        {
-          premium: true,
-        },
-        {
+      if (req?.body) {
+        res.status(200).json(req.body);
+      } else {
+        const { id, jwt } = req.query;
+        const user = verifyJWT(jwt);
+        const findTrx = await Transaction.findOne({
           where: {
-            id: user.id,
+            transactionId: id,
+            UserId: user.id,
           },
+        });
+        if (!findTrx) {
+          throw { code: 404, msg: "Transaction not found" };
         }
-      );
-      res.status(200).json({
-        message: "Payment successfully paid",
-      });
+        await User.update(
+          {
+            premium: true,
+          },
+          {
+            where: {
+              id: user.id,
+            },
+          }
+        );
+        res.status(200).json({
+          message: "Payment successfully paid",
+        });
+      }
     } catch (err) {
       next(err);
     }

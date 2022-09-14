@@ -7,7 +7,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "restart": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all",
-    "dev:db": "npx sequelize-cli db:migrate"
+    "dev:db": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate"
   },
   "repository": {
     "type": "git",
