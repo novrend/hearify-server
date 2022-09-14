@@ -113,6 +113,22 @@ class Controller {
       next(err);
     }
   }
+
+  static async getPlaylistByGenre(req, res, next) {
+    try {
+      const { name } = req.query;
+      const spotifyApi = await spotify();
+      const playlist = await spotifyApi.searchPlaylists(name, {
+        country: "ID",
+      });
+      res.status(200).json({
+        statusCode: 200,
+        data: playlist.body,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
