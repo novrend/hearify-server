@@ -161,6 +161,103 @@ class Controller {
       next(err);
     }
   }
+
+  static async sendResetPassword(req, res, next) {
+    try {
+      const { username } = req.body;
+      if (!username) {
+        throw {
+          code: 401,
+          msg: "Username/Email Cannot Be Empty",
+        };
+      }
+      const findUser = await User.findOne({
+        where: {
+          [Op.or]: {
+            username,
+            email: username,
+          },
+        },
+      });
+      if (!findUser) {
+        throw {
+          code: 401,
+          msg: "Invalid username/email",
+        };
+      }
+      const resetCode = Math.floor(1000 + Math.random() * 9000);
+      await User.update(
+        {
+          resetCode,
+        },
+        {
+          where: {
+            id: findUser.id,
+          },
+        }
+      );
+      const content = {
+        body: {
+          to: findUser.email,
+          subject: "Reset Password",
+          text: "Account Verified",
+          html: `<b>Your reset code is ${resetCode}</b>`,
+        },
+      };
+      await sendMail(content);
+      res.status(200).json({
+        statusCode: 200,
+        msg: "Reset Code Sended",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async resetPassword(req, res, next) {
+    try {
+      const { username, password, code } = req.body;
+      if (!username || !password || !code) {
+        throw {
+          code: 401,
+          msg: "Username/Password/Code Cannot Be Empty",
+        };
+      }
+      const findUser = await User.findOne({
+        where: {
+          [Op.or]: {
+            username,
+            email: username,
+          },
+          resetCode: code,
+        },
+      });
+      if (!findUser) {
+        throw {
+          code: 401,
+          msg: "Invalid username/reset code",
+        };
+      }
+      password = bcrypt.hashSync(password, 10);
+      await User.update(
+        {
+          password,
+          resetCode: null,
+        },
+        {
+          where: {
+            id: findUser.id,
+          },
+        }
+      );
+      res.status(200).json({
+        statusCode: 200,
+        msg: "Password Reset Successful",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
