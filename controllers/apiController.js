@@ -33,6 +33,32 @@ class Controller {
       next(err);
     }
   }
+
+  static async getArtistDetail(req, res, next) {
+    try {
+      const { artistId } = req.query;
+      const spotifyApi = await spotify();
+      const artist = await spotifyApi.getArtist(artistId);
+      const album = await spotifyApi.getArtistAlbums(artistId);
+      const tracks = await spotifyApi.getArtistTopTracks(artistId, "ID");
+      let result = [];
+      album.body.items.forEach((el) => {
+        if (el.available_markets.includes("ID")) {
+          result.push(el);
+        }
+      });
+      res.status(200).json({
+        statusCode: 200,
+        data: {
+          artist: artist.body,
+          albums: result,
+          tracks: tracks.body.tracks,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
