@@ -11,5 +11,6 @@ router.get("/search-song", apiController.searchSong);
 router.get("/get-song", apiController.getSong);
 router.get("/get-featured-playlist", apiController.getFeaturedPlaylist);
 router.get("/get-playlist-by-genre", apiController.getPlaylistByGenre);
+router.get("/get-genre", apiController.getGenreList);
 
 module.exports = router;
