@@ -135,6 +135,32 @@ class Controller {
       next(err);
     }
   }
+
+  static async changeConfirmCode(req, res, next) {
+    try {
+      const { id, isConfirmed } = req.user;
+      if (isConfirmed) {
+        throw { code: 400, msg: "Account already confirmed" };
+      }
+      const confirmationCode = Math.floor(1000 + Math.random() * 9000);
+      await User.update({ confirmationCode }, { where: id });
+      const content = {
+        body: {
+          to: email,
+          subject: "Hearify Account Verification",
+          text: "Account Verification",
+          html: `<b>Your confirmation code is ${confirmationCode}</b>`,
+        },
+      };
+      await sendMail(content);
+      res.status(201).json({
+        statusCode: 201,
+        msg: "Confirmation Code Sended",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
