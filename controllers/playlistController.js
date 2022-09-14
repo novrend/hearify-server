@@ -37,6 +37,33 @@ class Controller {
       next(err);
     }
   }
+
+  static async getPlaylistDetail(req, res, next) {
+    try {
+      const { playlistId } = req.params;
+      let playlist = await PlaylistSong.findAll({
+        where: {
+          PlaylistId: playlistId,
+        },
+        include: {
+          model: Playlist,
+        },
+      });
+      let songs = playlist.map((el) => el.songId);
+      const spotifyApi = await spotify();
+      const song = await spotifyApi.getTracks(songs);
+      song.body.tracks.forEach((el, i) => {
+        el.disc_number = playlist[i].id;
+      });
+      song.body.playlist = playlist[0].Playlist;
+      res.status(200).json({
+        statusCode: 200,
+        data: song.body,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;

@@ -31,5 +31,6 @@ const filePhoto = multer({
 router.use(isLoggedIn);
 router.get("/", playlistController.getPlaylist);
 router.post("/", filePhoto, playlistController.addPlaylist);
+router.get("/:playlistId", isAuthorized, playlistController.getPlaylistDetail);
 
 module.exports = router;
