@@ -1,4 +1,5 @@
 const { Playlist, PlaylistSong } = require("../models");
+const spotify = require("../helpers/spotifyApi");
 
 class Controller {
   static async getPlaylist(req, res, next) {
