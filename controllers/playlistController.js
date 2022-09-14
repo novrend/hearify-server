@@ -47,13 +47,19 @@ class Controller {
           model: Playlist,
         },
       });
-      let songs = playlist.map((el) => el.songId);
-      const spotifyApi = await spotify();
-      const song = await spotifyApi.getTracks(songs);
-      song.body.tracks.forEach((el, i) => {
-        el.disc_number = playlist[i].id;
-      });
-      song.body.playlist = playlist[0].Playlist;
+      if (playlist.length) {
+        let songs = playlist.map((el) => el.songId);
+        const spotifyApi = await spotify();
+        const song = await spotifyApi.getTracks(songs);
+        song.body.tracks.forEach((el, i) => {
+          el.disc_number = playlist[i].id;
+        });
+        song.body.playlist = playlist[0].Playlist;
+      } else {
+        const song = {
+          body: [],
+        };
+      }
       res.status(200).json({
         data: song.body,
       });
