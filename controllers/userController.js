@@ -73,6 +73,25 @@ class Controller {
       next(err);
     }
   }
+
+  static async me(req, res, next) {
+    try {
+      const { id } = req.user;
+      const userDetail = await User.findByPk(id);
+      res.status(200).json({
+        statusCode: 200,
+        data: {
+          id: userDetail.id,
+          email: userDetail.email,
+          name: userDetail.name,
+          premium: userDetail.premium,
+          isConfirmed: userDetail.isConfirmed,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
