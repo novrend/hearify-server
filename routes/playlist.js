@@ -28,6 +28,8 @@ const filePhoto = multer({
   },
 }).single("img");
 
+router.use(isLoggedIn);
 router.get("/", playlistController.getPlaylist);
+router.post("/", filePhoto, playlistController.addPlaylist);
 
 module.exports = router;
