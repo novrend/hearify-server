@@ -93,6 +93,26 @@ class Controller {
       });
     } catch (err) {}
   }
+
+  static async getFeaturedPlaylist(req, res, next) {
+    try {
+      const spotifyApi = await spotify();
+      let playlist = await spotifyApi.getFeaturedPlaylists({
+        country: "ID",
+        locale: "id_ID",
+      });
+      playlist = {
+        message: playlist.body.message,
+        playlists: playlist.body.playlists.items,
+      };
+      res.status(200).json({
+        statusCode: 200,
+        data: playlist,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
