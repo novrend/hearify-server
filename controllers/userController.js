@@ -92,6 +92,49 @@ class Controller {
       next(err);
     }
   }
+
+  static async confirm(req, res, next) {
+    try {
+      const { id, isConfirmed } = req.user;
+      const { confirmationCode } = req.body;
+      if (isConfirmed) {
+        throw { code: 400, msg: "Account already confirmed" };
+      }
+      if (!confirmationCode) {
+        throw {
+          code: 401,
+          msg: "Confirmation Code Cannot Be Empty",
+        };
+      }
+      const findUser = await User.findOne({
+        where: {
+          id,
+          confirmationCode,
+        },
+      });
+      if (!findUser) {
+        throw {
+          code: 401,
+          msg: "Invalid confirmation code",
+        };
+      }
+      await User.update({ isConfirmed: true }, { where: { id } });
+      const content = {
+        body: {
+          to: findUser.email,
+          subject: "Welcome to Hearify",
+          text: "Account Verified",
+          html: `<b>Hi ${findUser.name}, welcome to Hearify<br>Your account has been confirmed</b>`,
+        },
+      };
+      await sendMail(content);
+      res.status(201).json({
+        message: "Account Confirmed",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
