@@ -1,10 +1,41 @@
 const { User } = require("../models");
 const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { signJWT } = require("../helpers/jwt");
 const sendMail = require("../helpers/mailer");
 
 class Controller {
+  static async signin(req, res, next) {
+    const { access_token } = req.headers;
+    const payload = jwt.verify(access_token, process.env.SUPABASE_SECRET);
+    if (payload) {
+      const [user, isCreated] = await User.findOrCreate({
+        where: {
+          email: payload.user_metadata.email,
+          username: payload.user_metadata.email,
+        },
+        defaults: {
+          email: payload.user_metadata.email,
+          password: null,
+          name: payload.user_metadata.full_name,
+          username: payload.user_metadata.email,
+          premium: false,
+          isConfirmed: true,
+        },
+        skip: ["email", "username", "password"],
+        hooks: false,
+      });
+      const access_token = signJWT({
+        id: user.id,
+      });
+      res.status(isCreated ? 201 : 200).json({
+        access_token,
+        isPremium: user.premium,
+      });
+    }
+  }
+
   static async login(req, res, next) {
     try {
       const { username, password } = req.body;
