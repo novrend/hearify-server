@@ -89,6 +89,22 @@ class Controller {
       next(err);
     }
   }
+
+  static async addSong(req, res, next) {
+    try {
+      const { playlistId, songId } = req.params;
+      await PlaylistSong.create({
+        PlaylistId: playlistId,
+        songId: songId,
+      });
+      res.status(201).json({
+        statusCode: 201,
+        message: "Success add song to your playlist",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;

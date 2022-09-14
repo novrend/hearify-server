@@ -38,5 +38,6 @@ router.put(
   filePhoto,
   playlistController.editPlaylist
 );
+router.patch("/:playlistId/:songId", isAuthorized, playlistController.addSong);
 
 module.exports = router;
