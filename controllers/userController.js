@@ -38,7 +38,6 @@ class Controller {
         id: findUser.id,
       });
       res.status(200).json({
-        statusCode: 200,
         access_token,
       });
     } catch (err) {
@@ -68,7 +67,6 @@ class Controller {
         id: newUser.id,
       });
       res.status(201).json({
-        statusCode: 201,
         access_token,
       });
     } catch (err) {
