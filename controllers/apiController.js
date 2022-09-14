@@ -214,6 +214,22 @@ class Controller {
       next(err);
     }
   }
+
+  static async findPlaylist(req, res, next) {
+    try {
+      const { genre } = req.query;
+      const spotifyApi = await spotify();
+      const playlist = await spotifyApi.searchPlaylists(genre, {
+        country: "ID",
+      });
+      res.status(200).json({
+        statusCode: 200,
+        data: playlist,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
