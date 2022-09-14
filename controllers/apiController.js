@@ -81,6 +81,18 @@ class Controller {
       });
     } catch (err) {}
   }
+
+  static async getSong(req, res, next) {
+    try {
+      const { id } = req.query;
+      const spotifyApi = await spotify();
+      const song = await spotifyApi.getTracks([id, id, id]);
+      res.status(200).json({
+        statusCode: 200,
+        data: song.body,
+      });
+    } catch (err) {}
+  }
 }
 
 module.exports = Controller;
