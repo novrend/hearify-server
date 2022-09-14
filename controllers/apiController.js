@@ -13,7 +13,6 @@ class Controller {
           })
       );
       res.status(200).json({
-        statusCode: 200,
         data: album.body,
       });
     } catch (err) {
@@ -26,7 +25,6 @@ class Controller {
       const spotifyApi = await spotify();
       const newRelease = await spotifyApi.getNewReleases();
       res.status(200).json({
-        statusCode: 200,
         data: newRelease.body.albums.items,
       });
     } catch (err) {
@@ -48,12 +46,24 @@ class Controller {
         }
       });
       res.status(200).json({
-        statusCode: 200,
         data: {
           artist: artist.body,
           albums: result,
           tracks: tracks.body.tracks,
         },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getPlaylistDetail(req, res, next) {
+    try {
+      const { playlistId } = req.query;
+      const spotifyApi = await spotify();
+      const artist = await spotifyApi.getPlaylist(playlistId);
+      res.status(200).json({
+        data: artist.body,
       });
     } catch (err) {
       next(err);
