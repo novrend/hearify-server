@@ -7,5 +7,6 @@ router.get("/get-album", apiController.getAlbumDetail);
 router.get("/get-new-release", apiController.getNewReleases);
 router.get("/get-artist", apiController.getArtistDetail);
 router.get("/get-playlist", apiController.getPlaylistDetail);
+router.get("/search-song", apiController.searchSong);
 
 module.exports = router;

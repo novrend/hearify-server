@@ -69,6 +69,18 @@ class Controller {
       next(err);
     }
   }
+
+  static async searchSong(req, res, next) {
+    try {
+      const { q } = req.query;
+      const spotifyApi = await spotify();
+      const song = await spotifyApi.searchTracks(`track:${q}`);
+      res.status(200).json({
+        statusCode: 200,
+        data: song.body,
+      });
+    } catch (err) {}
+  }
 }
 
 module.exports = Controller;
