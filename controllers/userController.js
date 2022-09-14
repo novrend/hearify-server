@@ -2,6 +2,7 @@ const { User } = require("../models");
 const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { signJWT } = require("../helpers/jwt");
+const sendMail = require("../helpers/mailer");
 
 class Controller {
   static async login(req, res, next) {
@@ -38,6 +39,36 @@ class Controller {
       });
       res.status(200).json({
         statusCode: 200,
+        access_token,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async register(req, res, next) {
+    try {
+      const { username, email, password, name } = req.body;
+      const newUser = await User.create({
+        email,
+        username,
+        password,
+        name,
+      });
+      const content = {
+        body: {
+          to: email,
+          subject: "Hearify Account Verification",
+          text: "Account Verification",
+          html: `<b>Your confirmation code is ${newUser.confirmationCode}</b>`,
+        },
+      };
+      await sendMail(content);
+      const access_token = signJWT({
+        id: newUser.id,
+      });
+      res.status(201).json({
+        statusCode: 201,
         access_token,
       });
     } catch (err) {
