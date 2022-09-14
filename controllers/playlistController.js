@@ -64,6 +64,31 @@ class Controller {
       next(err);
     }
   }
+
+  static async editPlaylist(req, res, next) {
+    try {
+      const { filename } = req.file;
+      const { name } = req.body;
+      const { playlistId } = req.params;
+      await Playlist.update(
+        {
+          name,
+          imageUrl: `${process.env.BASE_URL_SERVER}/image/${filename}`,
+        },
+        {
+          where: {
+            id: playlistId,
+          },
+        }
+      );
+      res.status(200).json({
+        statusCode: 200,
+        message: "Playlist edited successfully",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
