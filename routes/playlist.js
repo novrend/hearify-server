@@ -39,5 +39,10 @@ router.put(
   playlistController.editPlaylist
 );
 router.patch("/:playlistId/:songId", isAuthorized, playlistController.addSong);
+router.delete(
+  "/:playlistId/:songId",
+  isAuthorized,
+  playlistController.deleteSong
+);
 
 module.exports = router;

@@ -11,7 +11,6 @@ class Controller {
         },
       });
       res.status(200).json({
-        statusCode: 200,
         data: playlist,
       });
     } catch (err) {
@@ -30,7 +29,6 @@ class Controller {
         UserId: id,
       });
       res.status(201).json({
-        statusCode: 201,
         message: "Playlist created successfully",
       });
     } catch (err) {
@@ -57,7 +55,6 @@ class Controller {
       });
       song.body.playlist = playlist[0].Playlist;
       res.status(200).json({
-        statusCode: 200,
         data: song.body,
       });
     } catch (err) {
@@ -82,7 +79,6 @@ class Controller {
         }
       );
       res.status(200).json({
-        statusCode: 200,
         message: "Playlist edited successfully",
       });
     } catch (err) {
@@ -98,8 +94,24 @@ class Controller {
         songId: songId,
       });
       res.status(201).json({
-        statusCode: 201,
         message: "Success add song to your playlist",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async deleteSong(req, res, next) {
+    try {
+      const { playlistId, songId } = req.params;
+      await PlaylistSong.destroy({
+        where: {
+          PlaylistId: playlistId,
+          id: songId,
+        },
+      });
+      res.status(200).json({
+        message: "Success delete song from your playlist",
       });
     } catch (err) {
       next(err);
