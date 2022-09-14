@@ -44,5 +44,6 @@ router.delete(
   isAuthorized,
   playlistController.deleteSong
 );
+router.delete("/:playlistId", isAuthorized, playlistController.deletePlaylist);
 
 module.exports = router;

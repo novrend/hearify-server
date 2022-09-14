@@ -117,6 +117,23 @@ class Controller {
       next(err);
     }
   }
+
+  static async deletePlaylist(req, res, next) {
+    try {
+      const { playlistId } = req.params;
+      await Playlist.destroy({
+        where: {
+          id: playlistId,
+        },
+      });
+      res.status(200).json({
+        statusCode: 200,
+        message: "Playlist deleted successfully",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
